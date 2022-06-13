@@ -1,7 +1,6 @@
 package bank
 
-import java.math.BigDecimal.ONE
-import java.math.BigDecimal.ZERO
+import java.math.BigDecimal.*
 import java.util.Currency.getInstance
 import java.util.Locale.US
 import kotlin.test.Test
@@ -18,5 +17,13 @@ class BankTest {
         val bank = Bank()
         bank.deposit("Alice", Money(ONE, getInstance(US)))
         assertEquals(Money(ONE, getInstance(US)), bank.balanceFor("Alice"))
+    }
+
+    @Test
+    fun `A customer's multiple deposits should be the accumulated balance`() {
+        val bank = Bank()
+        bank.deposit("Alice", Money(ONE, getInstance(US)))
+        bank.deposit("Alice", Money(TEN, getInstance(US)))
+        assertEquals(Money(valueOf(11), getInstance(US)), bank.balanceFor("Alice"))
     }
 }
