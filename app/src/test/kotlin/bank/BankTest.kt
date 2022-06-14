@@ -26,4 +26,12 @@ class BankTest {
         bank.deposit("Alice", Money(TEN, getInstance(US)))
         assertEquals(Money(valueOf(11), getInstance(US)), bank.balanceFor("Alice"))
     }
+
+    @Test
+    fun `Bank's total balance should be the accumulated customer deposits - single customer`() {
+        val bank = Bank()
+        bank.deposit("Alice", Money(ONE, getInstance(US)))
+        bank.deposit("Alice", Money(TEN, getInstance(US)))
+        assertEquals(Money(valueOf(11), getInstance(US)), bank.totalBalance())
+    }
 }
