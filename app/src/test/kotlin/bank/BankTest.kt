@@ -9,26 +9,35 @@ import kotlin.test.assertEquals
 
 class BankTest {
     @Test
-    fun `Bank without customer account should have zero balance`() {
+    fun `should have zero total balance for a newly established Bank in the right currency`() {
         assertEquals(Money(ZERO, getInstance(US)), Bank(getInstance(US)).totalBalance())
         assertEquals(Money(ZERO, getInstance(UK)), Bank(getInstance(UK)).totalBalance())
     }
 
     @Test
-    fun `A customer's first deposit is the customer's balance`() {
+    fun `should maintain the balance for a single customer's single deposit`() {
         val bank = Bank(getInstance(US))
         bank.deposit(Customer("Alice"), ONE)
         assertEquals(Money(ONE, getInstance(US)), bank.balanceFor(Customer("Alice")))
     }
     @Test
-    fun `Deposit in another currency (UK GBP)`() {
+    fun `should maintain the balance for a single customer's single deposit in anthoer currency (GBP)`() {
         val bank = Bank(getInstance(UK))
         bank.deposit(Customer("Alice"), ONE)
         assertEquals(Money(ONE, getInstance(UK)), bank.balanceFor(Customer("Alice")))
     }
 
     @Test
-    fun `should maintain balance for multiple customers and multiple deposits`() {
+    fun `should maintain the accumulated balance for a single customer's across multiple deposits`() {
+        val bank = Bank(getInstance(US))
+        bank.deposit(Customer("Alice"), ONE)
+        bank.deposit(Customer("Alice"), TEN)
+        assertEquals(Money(valueOf(11), getInstance(US)), bank.balanceFor(Customer("Alice")))
+    }
+
+
+    @Test
+    fun `should maintain accumulated balance for multiple customers across multiple deposits`() {
         val bank = Bank(getInstance(US))
         bank.deposit(Customer("Alice"), ONE)
         bank.deposit(Customer("Alice"), TEN)
@@ -37,20 +46,20 @@ class BankTest {
         assertEquals(Money(TEN, getInstance(US)), bank.balanceFor(Customer("Bob")))
     }
 
-
     @Test
-    fun `A customer's multiple deposits should be the accumulated balance`() {
-        val bank = Bank(getInstance(US))
-        bank.deposit(Customer("Alice"), ONE)
-        bank.deposit(Customer("Alice"), TEN)
-        assertEquals(Money(valueOf(11), getInstance(US)), bank.balanceFor(Customer("Alice")))
-    }
-
-    @Test
-    fun `Bank's total balance should be the accumulated customer deposits - single customer`() {
+    fun `should maintain the total accumulated balance for the Bank's across customer deposits - single customer`() {
         val bank = Bank(getInstance(US))
         bank.deposit(Customer("Alice"), ONE)
         bank.deposit(Customer("Alice"), TEN)
         assertEquals(Money(valueOf(11), getInstance(US)), bank.totalBalance())
+    }
+
+    @Test
+    fun `should maintain the total accumulated balance for the Bank's across customer deposits - multiple customers`() {
+        val bank = Bank(getInstance(US))
+        bank.deposit(Customer("Alice"), ONE)
+        bank.deposit(Customer("Alice"), TEN)
+        bank.deposit(Customer("Bob"), TEN)
+        assertEquals(Money(valueOf(21), getInstance(US)), bank.totalBalance())
     }
 }
