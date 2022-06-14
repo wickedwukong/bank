@@ -84,8 +84,8 @@ class BankTest {
     fun `should result in error when withdrawing for an unknown customer`() {
         val bank = Bank(getInstance(US))
         assertEquals(
-            bank.withdraw(Customer("UnknownCustomerId"), ONE).failureOrNull(),
-            UnknownCustomerError(Customer("UnknownCustomerId"))
+            UnknownCustomerError(Customer("UnknownCustomerId")),
+            bank.withdraw(Customer("UnknownCustomerId"), ONE).failureOrNull()
         )
     }
 
@@ -96,5 +96,18 @@ class BankTest {
 
         assertEquals(Money(ONE, getInstance(US)), bank.withdraw(Customer("Alice"), ONE).get())
         assertEquals(Money(valueOf(9), getInstance(US)), bank.balanceFor(Customer("Alice")))
+    }
+
+    @Test
+    fun `should result in error when customer withdraws more than existing balance and customer's balance remains unchanged`() {
+        val bank = Bank(getInstance(US))
+        bank.deposit(Customer("Alice"), ONE)
+
+        assertEquals(
+            WithdrawExceedingBalanceError(Customer("Alice"), Money(ONE, getInstance(US))),
+            bank.withdraw(Customer("Alice"), valueOf(2)).failureOrNull()
+        )
+
+        assertEquals(Money(ONE, getInstance(US)), bank.balanceFor(Customer("Alice")))
     }
 }

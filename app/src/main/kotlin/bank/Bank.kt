@@ -3,7 +3,6 @@ package bank
 import dev.forkhandles.result4k.Failure
 import dev.forkhandles.result4k.Result4k
 import dev.forkhandles.result4k.Success
-import dev.forkhandles.result4k.map
 import java.math.BigDecimal
 import java.util.*
 
@@ -29,10 +28,12 @@ class Bank(val currency: Currency) {
 
     fun withdraw(customer: Customer, moneyAmount: BigDecimal): Result4k<Money, BankError> {
         return accounts[customer]?.let {
-            Money(it.value.minus(moneyAmount), currency)
-        }?.let {
-            accounts[customer] = it
-            Success(Money(moneyAmount, currency))
+            if (it.value > moneyAmount) {
+                accounts[customer] = Money(it.value.minus(moneyAmount), currency)
+                Success(Money(moneyAmount, currency))
+            } else {
+                Failure(WithdrawExceedingBalanceError(customer, Money(BigDecimal.ONE, Currency.getInstance(Locale.US))))
+            }
         } ?: Failure(UnknownCustomerError(customer))
     }
 
