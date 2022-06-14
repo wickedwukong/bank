@@ -30,7 +30,7 @@ class Bank(val currency: Currency) {
 
     fun withdraw(customer: Customer, withdrawingAmount: Money): Result4k<Money, BankError> =
         validateCurrency(withdrawingAmount).flatMap {
-            validateWithdrawAmount(withdrawingAmount)
+            validateAmountHasToBePositive(withdrawingAmount)
         }.flatMap {
             validateCustomer(customer)
         }.flatMap { existingBalance ->
@@ -56,9 +56,9 @@ class Bank(val currency: Currency) {
             )
         }
 
-    private fun validateWithdrawAmount(withdrawingAmount: Money): Result<Money, BankError> =
+    private fun validateAmountHasToBePositive(withdrawingAmount: Money): Result<Money, BankError> =
         if (withdrawingAmount.value <= BigDecimal.ZERO) {
-            Failure(AmountHasToBeMoreThanZeroError(withdrawingAmount))
+            Failure(AmountHasToBePositiveError(withdrawingAmount))
         } else {
             Success(withdrawingAmount)
         }

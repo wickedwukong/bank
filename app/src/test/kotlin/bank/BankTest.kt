@@ -143,13 +143,13 @@ class BankTest {
         bank.deposit(Customer("Alice"), Money(ONE, getInstance(US)))
 
         assertEquals(
-            AmountHasToBeMoreThanZeroError(Money(valueOf(0), getInstance(US))),
+            AmountHasToBePositiveError(Money(valueOf(0), getInstance(US))),
             bank.withdraw(Customer("Alice"), Money(ZERO, bank.currency)).failureOrNull()
         )
         assertEquals(Money(ONE, getInstance(US)), bank.balanceFor(Customer("Alice")))
 
         assertEquals(
-            AmountHasToBeMoreThanZeroError(Money(valueOf(-1), getInstance(US))),
+            AmountHasToBePositiveError(Money(valueOf(-1), getInstance(US))),
             bank.withdraw(Customer("Alice"), Money(valueOf(-1), bank.currency)).failureOrNull()
         )
 

@@ -14,7 +14,8 @@ The main class is `Bank`. The `Bank` supports the following features:
 
 Assumption:
 The Bank only supports a single currency. Currency is configured when `Bank` is initiated. Having the `Bank` deal with
-a different currency result in a `BankError`.
+a different currency results in a `Failure` with a `UnSupportedCurrencyError` (See detailed scenarios below.) when 
+depositing or withdrawing
 
 Thread safety is not a concern. Concurrent access to a customer account modifying balance is not addressed in the solution.
 
@@ -32,17 +33,17 @@ Supported & tested scenarios:
 
 # Deposit:
 
-1. Deposit a regular amount. 
-2. Deposit a negative or Zero amount.
-3. Deposit an amount with unsupported currency
+1. Deposit a regular amount results in a `Success` with the deposit amount returned 
+2. Deposit a negative or Zero amount results in a `Failure` with a specific error
+3. Deposit an amount with unsupported currency results in a `Failure` with a `UnSupportedCurrencyError`
 
 # Withdraw
 
-1. Withdraw a regular amount - less than existing amount
-2. Withdraw all of a customer's balance
-3. Withdraw a negative or Zero amount
-4. Withdraw an amount with unsupported currency
-5. Withdraw more than existing balance
+1. Withdraw a regular amount, i.e. less than existing amount, results in a `Success` with the withdrew amount returned
+2. Withdraw all of a customer's balance results in a `Success` with the withdrew amount returned. Customer's balance becomes Zero
+3. Withdraw a negative or Zero amount results in a `Failure` with a specific error
+4. Withdraw an amount with unsupported currency results in `Failure` with a `UnSupportedCurrencyError`
+5. Withdraw more than existing balance results in `Failure` with a specific error
 
 # Checking balance for a customer
 
@@ -52,7 +53,7 @@ Supported & tested scenarios:
 4. Checking balance for a customer after a withdraw of all of a customer's balance
 5. Checking balance for a customer after multiple withdraws
 6. Checking balance after a deposit and withdraw error
-7. Checking balance after a non-exsiting customer.
+7. Checking balance after a non-existing customer.
 
 
 

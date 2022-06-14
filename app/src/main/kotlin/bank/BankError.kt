@@ -6,7 +6,7 @@ sealed interface BankError {
     val message: String
 }
 
-data class AmountHasToBeMoreThanZeroError(val amount: Money) : BankError {
+data class AmountHasToBePositiveError(val amount: Money) : BankError {
     override val message: String
         get() = "Amount has to be more than Zero. Invalid amount: $amount"
 
