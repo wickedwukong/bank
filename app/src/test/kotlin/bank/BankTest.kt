@@ -90,7 +90,7 @@ class BankTest {
     }
 
     @Test
-    fun `should let customer withdraw money`() {
+    fun `should let customer withdraw money and maintain customer's new balance`() {
         val bank = Bank(getInstance(US))
         bank.deposit(Customer("Alice"), TEN)
 
