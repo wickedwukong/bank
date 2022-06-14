@@ -22,13 +22,6 @@ class Bank(val currency: Currency) {
                 accounts[customer] = newBalance
             }.map { deposit }
 
-    private fun validateCurrency(moneyAmount: Money): Result4k<Money, BankError> =
-        if (moneyAmount.currency == currency) {
-            Success(moneyAmount)
-        } else {
-            Failure(UnSupportedCurrencyError(currency, moneyAmount.currency))
-        }
-
     fun balanceFor(customer: Customer): Money? {
         return this.accounts[customer]
     }
@@ -36,22 +29,29 @@ class Bank(val currency: Currency) {
     fun withdraw(customer: Customer, withdrawingAmount: Money): Result4k<Money, BankError> =
         validateWithdrawAmount(withdrawingAmount)
             .flatMap {
-                balanceFor(customer)?.let { existingBalance ->
-                    Success(existingBalance)
-                } ?: Failure(UnknownCustomerError(customer))
+                validateCustomer(customer)
             }.flatMap { existingBalance ->
-                if (existingBalance.value > withdrawingAmount.value) {
-                    Success(Money(existingBalance.value.minus(withdrawingAmount.value), currency))
-                } else {
-                    Failure(
-                        WithdrawExceedingBalanceError(customer, withdrawingAmount)
-                    )
-                }
+                validateBalanceAgainstAttemptedWithdraw(existingBalance, withdrawingAmount, customer)
+            }.map { existingBalance ->
+                Money(existingBalance.value.minus(withdrawingAmount.value), currency)
             }.peek { newBalance ->
                 accounts[customer] = newBalance
             }.map {
                 withdrawingAmount
             }
+
+    private fun validateCustomer(customer: Customer) = balanceFor(customer)?.let { existingBalance ->
+        Success(existingBalance)
+    } ?: Failure(UnknownCustomerError(customer))
+
+    private fun validateBalanceAgainstAttemptedWithdraw(balance: Money, withdrawingAmount: Money, customer: Customer) =
+        if (balance.value > withdrawingAmount.value) {
+            Success(balance)
+        } else {
+            Failure(
+                WithdrawExceedingBalanceError(customer, withdrawingAmount)
+            )
+        }
 
     private fun validateWithdrawAmount(withdrawingAmount: Money): Result<Money, BankError> =
         if (withdrawingAmount.value <= BigDecimal.ZERO) {
@@ -60,4 +60,10 @@ class Bank(val currency: Currency) {
             Success(withdrawingAmount)
         }
 
+    private fun validateCurrency(moneyAmount: Money): Result4k<Money, BankError> =
+        if (moneyAmount.currency == currency) {
+            Success(moneyAmount)
+        } else {
+            Failure(UnSupportedCurrencyError(currency, moneyAmount.currency))
+        }
 }

@@ -6,6 +6,7 @@
 6. Why choosing map
 7. Why data class customer?
 8. Assumption: only support a single currency?
+9. why sum and subtraction logics are in Bank not Money
 
 TODO:
 
