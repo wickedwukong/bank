@@ -27,6 +27,10 @@ class Bank(val currency: Currency) {
     }
 
     fun withdraw(customer: Customer, moneyAmount: BigDecimal): Result4k<Money, BankError> {
+        if (moneyAmount <= BigDecimal.ZERO) {
+            return Failure(AmountHasToBeMoreThanZeroError(Money(moneyAmount, currency)))
+        }
+
         return accounts[customer]?.let {
             if (it.value > moneyAmount) {
                 accounts[customer] = Money(it.value.minus(moneyAmount), currency)

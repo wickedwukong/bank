@@ -110,4 +110,23 @@ class BankTest {
 
         assertEquals(Money(ONE, getInstance(US)), bank.balanceFor(Customer("Alice")))
     }
+
+    @Test
+    fun `should result in error when withdrawing Zero or less than Zero amount`() {
+        val bank = Bank(getInstance(US))
+        bank.deposit(Customer("Alice"), ONE)
+
+        assertEquals(
+            AmountHasToBeMoreThanZeroError(Money(valueOf(0), getInstance(US))),
+            bank.withdraw(Customer("Alice"), valueOf(0)).failureOrNull()
+        )
+        assertEquals(Money(ONE, getInstance(US)), bank.balanceFor(Customer("Alice")))
+
+        assertEquals(
+            AmountHasToBeMoreThanZeroError(Money(valueOf(-1), getInstance(US))),
+            bank.withdraw(Customer("Alice"), valueOf(-1)).failureOrNull()
+        )
+
+        assertEquals(Money(ONE, getInstance(US)), bank.balanceFor(Customer("Alice")))
+    }
 }
