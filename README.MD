@@ -6,3 +6,9 @@
 6. Why choosing map
 7. Why data class customer?
 8. Assumption: only support a single currency?
+
+TODO:
+
+test withdraw same amount as balance
+withdraw unsupported currency
+

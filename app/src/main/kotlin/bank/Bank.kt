@@ -33,19 +33,31 @@ class Bank(val currency: Currency) {
         return this.accounts[customer]
     }
 
-    fun withdraw(customer: Customer, withdrawingAmount: Money): Result4k<Money, BankError> {
-        if (withdrawingAmount.value <= BigDecimal.ZERO) {
-            return Failure(AmountHasToBeMoreThanZeroError(withdrawingAmount))
-        }
-
-        return accounts[customer]?.let {
-            if (it.value > withdrawingAmount.value) {
-                accounts[customer] = Money(it.value.minus(withdrawingAmount.value), currency)
-                Success(withdrawingAmount)
-            } else {
-                Failure(WithdrawExceedingBalanceError(customer, Money(BigDecimal.ONE, Currency.getInstance(Locale.US))))
+    fun withdraw(customer: Customer, withdrawingAmount: Money): Result4k<Money, BankError> =
+        validateWithdrawAmount(withdrawingAmount)
+            .flatMap {
+                balanceFor(customer)?.let { existingBalance ->
+                    Success(existingBalance)
+                } ?: Failure(UnknownCustomerError(customer))
+            }.flatMap { existingBalance ->
+                if (existingBalance.value > withdrawingAmount.value) {
+                    Success(Money(existingBalance.value.minus(withdrawingAmount.value), currency))
+                } else {
+                    Failure(
+                        WithdrawExceedingBalanceError(customer, withdrawingAmount)
+                    )
+                }
+            }.peek { newBalance ->
+                accounts[customer] = newBalance
+            }.map {
+                withdrawingAmount
             }
-        } ?: Failure(UnknownCustomerError(customer))
-    }
+
+    private fun validateWithdrawAmount(withdrawingAmount: Money): Result<Money, BankError> =
+        if (withdrawingAmount.value <= BigDecimal.ZERO) {
+            Failure(AmountHasToBeMoreThanZeroError(withdrawingAmount))
+        } else {
+            Success(withdrawingAmount)
+        }
 
 }

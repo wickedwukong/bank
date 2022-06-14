@@ -120,7 +120,7 @@ class BankTest {
         bank.deposit(Customer("Alice"), Money(ONE, getInstance(US)))
 
         assertEquals(
-            WithdrawExceedingBalanceError(Customer("Alice"), Money(ONE, getInstance(US))),
+            WithdrawExceedingBalanceError(Customer("Alice"), Money(valueOf(2), getInstance(US))),
             bank.withdraw(Customer("Alice"), Money(valueOf(2), bank.currency)).failureOrNull()
         )
 
