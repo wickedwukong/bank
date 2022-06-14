@@ -49,7 +49,7 @@ class BankTest {
     }
 
     @Test
-    fun `should maintain the balance for a single customer's single deposit in another currency (GBP)`() {
+    fun `should maintain the balance for a single customer's single deposit in a different currency (GBP)`() {
         val bank = Bank(getInstance(UK))
         bank.deposit(Customer("Alice"), Money(ONE, getInstance(UK)))
 
@@ -171,7 +171,7 @@ class BankTest {
     }
 
     @Test
-    fun `should maintain bank's total balance with various deposit and withdraws across multiple customers`() {
+    fun `should maintain bank's total balance with various deposits and withdraws across multiple customers`() {
         val bank = Bank(getInstance(US))
         bank.deposit(Customer("Alice"), Money(ONE, getInstance(US)))
         assertEquals(Money(ONE, getInstance(US)), bank.totalBalance())
@@ -184,5 +184,10 @@ class BankTest {
 
         bank.withdraw(Customer("Alice"), Money(ONE, getInstance(US)))
         assertEquals(Money(valueOf(2), getInstance(US)), bank.totalBalance())
+
+        bank.withdraw(Customer("Alice"), Money(ONE, getInstance(US)))
+        assertEquals(Money(ZERO, getInstance(US)), bank.balanceFor(Customer("Alice")))
+        assertEquals(Money(ONE, getInstance(US)), bank.balanceFor(Customer("Bob")))
+        assertEquals(Money(valueOf(1), getInstance(US)), bank.totalBalance())
     }
 }

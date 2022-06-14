@@ -39,10 +39,21 @@ Supported & tested scenarios:
 # Withdraw
 
 1. Withdraw a regular amount - less than existing amount
-1. Withdraw all of a customer's balance
-2. Withdraw a negative or Zero amount
-3. Withdraw an amount with unsupported currency
-4. Withdraw more than existing balance
+2. Withdraw all of a customer's balance
+3. Withdraw a negative or Zero amount
+4. Withdraw an amount with unsupported currency
+5. Withdraw more than existing balance
+
+# Checking balance for a customer
+
+1. Checking balance for a customer after a deposit
+2. Checking balance for a customer after multiple deposits
+3. Checking balance for a customer after a withdraw
+4. Checking balance for a customer after a withdraw of all of a customer's balance
+5. Checking balance for a customer after multiple withdraws
+6. Checking balance after a deposit and withdraw error
+7. Checking balance after a non-exsiting customer.
+
 
 
 # Total Bank balance
@@ -56,6 +67,9 @@ Supported & tested scenarios:
 7. Total bank balance after a failed withdraw
 8. Total bank balance after a failed deposit
 
+# Multiple customers
+
+1. Multiple customer's balance are maintained after a deposits and withdraws
 
 
 
