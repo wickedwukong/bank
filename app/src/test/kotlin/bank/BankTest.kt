@@ -1,7 +1,7 @@
 package bank
 
 import dev.forkhandles.result4k.failureOrNull
-import dev.forkhandles.result4k.valueOrNull
+import dev.forkhandles.result4k.get
 import java.math.BigDecimal.*
 import java.util.Currency.getInstance
 import java.util.Locale.UK
@@ -94,10 +94,7 @@ class BankTest {
         val bank = Bank(getInstance(US))
         bank.deposit(Customer("Alice"), TEN)
 
-        assertEquals(
-            Money(valueOf(9), getInstance(US)),
-            bank.withdraw(Customer("Alice"), ONE).valueOrNull()
-
-        )
+        assertEquals(Money(ONE, getInstance(US)), bank.withdraw(Customer("Alice"), ONE).get())
+        assertEquals(Money(valueOf(9), getInstance(US)), bank.balanceFor(Customer("Alice")))
     }
 }

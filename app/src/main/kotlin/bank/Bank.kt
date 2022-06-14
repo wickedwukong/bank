@@ -32,7 +32,7 @@ class Bank(val currency: Currency) {
             Money(it.value.minus(moneyAmount), currency)
         }?.let {
             accounts[customer] = it
-            Success(it)
+            Success(Money(moneyAmount, currency))
         } ?: Failure(UnknownCustomerError(customer))
     }
 
