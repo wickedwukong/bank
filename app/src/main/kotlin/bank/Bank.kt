@@ -1,8 +1,6 @@
 package bank
 
-import dev.forkhandles.result4k.Failure
-import dev.forkhandles.result4k.Result4k
-import dev.forkhandles.result4k.Success
+import dev.forkhandles.result4k.*
 import java.math.BigDecimal
 import java.util.*
 
@@ -14,17 +12,22 @@ class Bank(val currency: Currency) {
             Money(totalBalance.value.plus(accountBalance.value), totalBalance.currency)
         }
 
-    fun deposit(customer: Customer, moneyAmount: Money): Result4k<Money, BankError> {
-        if (moneyAmount.currency != currency) {
-            return Failure(UnSupportedCurrencyError(currency, moneyAmount.currency))
-        }
-        val newBalance = accounts[customer]?.let {
-            Money(it.value.plus(moneyAmount.value), currency)
-        } ?: moneyAmount
+    fun deposit(customer: Customer, deposit: Money): Result4k<Money, BankError> =
+        validateCurrency(deposit)
+            .map { validDeposit ->
+                accounts[customer]?.let {
+                    Money(it.value.plus(validDeposit.value), currency)
+                } ?: validDeposit
+            }.peek { newBalance ->
+                accounts[customer] = newBalance
+            }.map { deposit }
 
-        accounts[customer] = newBalance
-        return Success(moneyAmount)
-    }
+    private fun validateCurrency(moneyAmount: Money): Result4k<Money, BankError> =
+        if (moneyAmount.currency == currency) {
+            Success(moneyAmount)
+        } else {
+            Failure(UnSupportedCurrencyError(currency, moneyAmount.currency))
+        }
 
     fun balanceFor(customer: Customer): Money? {
         return this.accounts[customer]
