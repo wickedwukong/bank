@@ -10,5 +10,45 @@
 
 TODO:
 
+The main class is `Bank`. The `Bank` supports the following features:
+
+Assumption:
+The Bank only supports a single currency. Currency is configured when `Bank` is initiated. Having the `Bank` deal with
+a different currency result in a `BankError`.
+
+Thread safety is not a concern. Concurrent access to a customer account modifying balance is not addressed in the solution.
+
+Overall design:
+
+The main class is `Bank`. The `Bank` supports the following features:
+
+1. Deposit
+2. Withdraw
+3. Checking balance for a customer
+4. Total Bank balance 
+5. Multiple customers
+
+Supported & tested scenarios:
+
+# Deposit:
+
+1. Deposit a regular amount. 
+2. Deposit a negative or Zero amount.
+3. Deposit an amount with unsupported currency
+
+# Total Bank balance
+
+1. A bank without any customer (i.e a new bank) should have Zero balance
+2. Total bank balance after a single customer deposit
+2. Total bank balance after a single customer's multiple deposit
+3. Total bank balance after multi-customer's multiple deposits
+3. Total bank balance after withdraw
+
+
+
+
+
+Supported
+
 withdraw unsupported currency
 

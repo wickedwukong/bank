@@ -97,12 +97,14 @@ class BankTest {
     }
 
     @Test
-    fun `should result in error when withdrawing for an unknown customer`() {
+    fun `should result in error when withdrawing for an unknown customer and Bank's total balance is not changed`() {
         val bank = Bank(getInstance(US))
         assertEquals(
             UnknownCustomerError(Customer("UnknownCustomerId")),
             bank.withdraw(Customer("UnknownCustomerId"), Money(ONE, bank.currency)).failureOrNull()
         )
+
+        assertEquals(Money(ZERO, getInstance(US)), bank.totalBalance())
     }
 
     @Test
@@ -155,7 +157,7 @@ class BankTest {
     }
 
     @Test
-    fun `should result in error when withdrawing unsupported currency and maintain customer's original balance`() {
+    fun `should result in error when withdrawing unsupported currency and maintain customer's original balance and bank's total balance`() {
         val bank = Bank(getInstance(US))
         bank.deposit(Customer("Alice"), Money(ONE, getInstance(US)))
 
@@ -165,6 +167,22 @@ class BankTest {
         )
 
         assertEquals(Money(ONE, getInstance(US)), bank.balanceFor(Customer("Alice")))
+        assertEquals(Money(ONE, getInstance(US)), bank.totalBalance())
     }
 
+    @Test
+    fun `should maintain bank's total balance with various deposit and withdraws across multiple customers`() {
+        val bank = Bank(getInstance(US))
+        bank.deposit(Customer("Alice"), Money(ONE, getInstance(US)))
+        assertEquals(Money(ONE, getInstance(US)), bank.totalBalance())
+
+        bank.deposit(Customer("Bob"), Money(ONE, getInstance(US)))
+        assertEquals(Money(valueOf(2), getInstance(US)), bank.totalBalance())
+
+        bank.deposit(Customer("Alice"), Money(ONE, getInstance(US)))
+        assertEquals(Money(valueOf(3), getInstance(US)), bank.totalBalance())
+
+        bank.withdraw(Customer("Alice"), Money(ONE, getInstance(US)))
+        assertEquals(Money(valueOf(2), getInstance(US)), bank.totalBalance())
+    }
 }
