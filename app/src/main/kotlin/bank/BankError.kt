@@ -14,7 +14,7 @@ data class AmountHasToBeMoreThanZeroError(val amount: Money) : BankError {
 
 data class UnSupportedCurrencyError(val supportedCurrency: Currency, val unsupportedCurrency: Currency) : BankError {
     override val message: String
-        get() = TODO("Not yet implemented")
+        get() = "UnSupportedCurrency: $unsupportedCurrency. The supported currency: $supportedCurrency"
 }
 
 data class WithdrawExceedingBalanceError(val customer: Customer, val attemptedWithdrawAmount: Money) : BankError {
