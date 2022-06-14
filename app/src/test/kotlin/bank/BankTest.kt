@@ -49,7 +49,7 @@ class BankTest {
     }
 
     @Test
-    fun `should maintain the balance for a single customer's single deposit in anthoer currency (GBP)`() {
+    fun `should maintain the balance for a single customer's single deposit in another currency (GBP)`() {
         val bank = Bank(getInstance(UK))
         bank.deposit(Customer("Alice"), Money(ONE, getInstance(UK)))
 
@@ -101,7 +101,7 @@ class BankTest {
         val bank = Bank(getInstance(US))
         assertEquals(
             UnknownCustomerError(Customer("UnknownCustomerId")),
-            bank.withdraw(Customer("UnknownCustomerId"), ONE).failureOrNull()
+            bank.withdraw(Customer("UnknownCustomerId"), Money(ONE, bank.currency)).failureOrNull()
         )
     }
 
@@ -110,7 +110,7 @@ class BankTest {
         val bank = Bank(getInstance(US))
         bank.deposit(Customer("Alice"), Money(TEN, getInstance(US)))
 
-        assertEquals(Money(ONE, getInstance(US)), bank.withdraw(Customer("Alice"), ONE).get())
+        assertEquals(Money(ONE, getInstance(US)), bank.withdraw(Customer("Alice"), Money(ONE, bank.currency)).get())
         assertEquals(Money(valueOf(9), getInstance(US)), bank.balanceFor(Customer("Alice")))
     }
 
@@ -121,7 +121,7 @@ class BankTest {
 
         assertEquals(
             WithdrawExceedingBalanceError(Customer("Alice"), Money(ONE, getInstance(US))),
-            bank.withdraw(Customer("Alice"), valueOf(2)).failureOrNull()
+            bank.withdraw(Customer("Alice"), Money(valueOf(2), bank.currency)).failureOrNull()
         )
 
         assertEquals(Money(ONE, getInstance(US)), bank.balanceFor(Customer("Alice")))
@@ -134,13 +134,13 @@ class BankTest {
 
         assertEquals(
             AmountHasToBeMoreThanZeroError(Money(valueOf(0), getInstance(US))),
-            bank.withdraw(Customer("Alice"), valueOf(0)).failureOrNull()
+            bank.withdraw(Customer("Alice"), Money(ZERO, bank.currency)).failureOrNull()
         )
         assertEquals(Money(ONE, getInstance(US)), bank.balanceFor(Customer("Alice")))
 
         assertEquals(
             AmountHasToBeMoreThanZeroError(Money(valueOf(-1), getInstance(US))),
-            bank.withdraw(Customer("Alice"), valueOf(-1)).failureOrNull()
+            bank.withdraw(Customer("Alice"), Money(valueOf(-1), bank.currency)).failureOrNull()
         )
 
         assertEquals(Money(ONE, getInstance(US)), bank.balanceFor(Customer("Alice")))

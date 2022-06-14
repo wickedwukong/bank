@@ -33,15 +33,15 @@ class Bank(val currency: Currency) {
         return this.accounts[customer]
     }
 
-    fun withdraw(customer: Customer, moneyAmount: BigDecimal): Result4k<Money, BankError> {
-        if (moneyAmount <= BigDecimal.ZERO) {
-            return Failure(AmountHasToBeMoreThanZeroError(Money(moneyAmount, currency)))
+    fun withdraw(customer: Customer, withdrawingAmount: Money): Result4k<Money, BankError> {
+        if (withdrawingAmount.value <= BigDecimal.ZERO) {
+            return Failure(AmountHasToBeMoreThanZeroError(withdrawingAmount))
         }
 
         return accounts[customer]?.let {
-            if (it.value > moneyAmount) {
-                accounts[customer] = Money(it.value.minus(moneyAmount), currency)
-                Success(Money(moneyAmount, currency))
+            if (it.value > withdrawingAmount.value) {
+                accounts[customer] = Money(it.value.minus(withdrawingAmount.value), currency)
+                Success(withdrawingAmount)
             } else {
                 Failure(WithdrawExceedingBalanceError(customer, Money(BigDecimal.ONE, Currency.getInstance(Locale.US))))
             }
