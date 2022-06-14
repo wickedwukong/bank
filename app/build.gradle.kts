@@ -27,8 +27,8 @@ dependencies {
     // Use the Kotlin JDK 8 standard library.
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
-    // This dependency is used by the application.
-    implementation("com.google.guava:guava:30.1.1-jre")
+    implementation(platform("dev.forkhandles:forkhandles-bom:2.2.0.0"))
+    implementation("dev.forkhandles:result4k")
 }
 
 testing {

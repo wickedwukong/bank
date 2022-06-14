@@ -6,6 +6,7 @@ import java.util.Locale.UK
 import java.util.Locale.US
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
 class BankTest {
     @Test
@@ -20,6 +21,12 @@ class BankTest {
         bank.deposit(Customer("Alice"), ONE)
         assertEquals(Money(ONE, getInstance(US)), bank.balanceFor(Customer("Alice")))
     }
+    @Test
+    fun `should have no balance for an unknown customer`() {
+        val bank = Bank(getInstance(US))
+        assertNull(bank.balanceFor(Customer("Alice")))
+    }
+
     @Test
     fun `should maintain the balance for a single customer's single deposit in anthoer currency (GBP)`() {
         val bank = Bank(getInstance(UK))
