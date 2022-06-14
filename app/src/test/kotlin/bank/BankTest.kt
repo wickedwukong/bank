@@ -21,11 +21,22 @@ class BankTest {
         assertEquals(Money(ONE, getInstance(US)), bank.balanceFor(Customer("Alice")))
     }
     @Test
-    fun `Deposit in another currency`() {
+    fun `Deposit in another currency (UK GBP)`() {
         val bank = Bank(getInstance(UK))
         bank.deposit(Customer("Alice"), ONE)
         assertEquals(Money(ONE, getInstance(UK)), bank.balanceFor(Customer("Alice")))
     }
+
+    @Test
+    fun `should maintain balance for multiple customers and multiple deposits`() {
+        val bank = Bank(getInstance(US))
+        bank.deposit(Customer("Alice"), ONE)
+        bank.deposit(Customer("Alice"), TEN)
+        bank.deposit(Customer("Bob"), TEN)
+        assertEquals(Money(valueOf(11), getInstance(US)), bank.balanceFor(Customer("Alice")))
+        assertEquals(Money(TEN, getInstance(US)), bank.balanceFor(Customer("Bob")))
+    }
+
 
     @Test
     fun `A customer's multiple deposits should be the accumulated balance`() {
