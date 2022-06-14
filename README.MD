@@ -36,19 +36,26 @@ Supported & tested scenarios:
 2. Deposit a negative or Zero amount.
 3. Deposit an amount with unsupported currency
 
+# Withdraw
+
+1. Withdraw a regular amount - less than existing amount
+1. Withdraw all of a customer's balance
+2. Withdraw a negative or Zero amount
+3. Withdraw an amount with unsupported currency
+4. Withdraw more than existing balance
+
+
 # Total Bank balance
 
 1. A bank without any customer (i.e a new bank) should have Zero balance
 2. Total bank balance after a single customer deposit
-2. Total bank balance after a single customer's multiple deposit
-3. Total bank balance after multi-customer's multiple deposits
-3. Total bank balance after withdraw
+3. Total bank balance after a single customer's multiple deposit
+4. Total bank balance after multi-customer's multiple deposits
+5. Total bank balance after a single withdraw
+6. Total bank balance after multiple withdraws across multiple customers
+7. Total bank balance after a failed withdraw
+8. Total bank balance after a failed deposit
 
 
 
-
-
-Supported
-
-withdraw unsupported currency
 
