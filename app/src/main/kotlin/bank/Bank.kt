@@ -14,12 +14,13 @@ class Bank(val currency: Currency) {
             Money(totalBalance.value.plus(accountBalance.value), totalBalance.currency)
         }
 
-    fun deposit(customer: Customer, moneyAmount: Money) {
+    fun deposit(customer: Customer, moneyAmount: Money): Result4k<Money, Unit> {
         val newBalance = accounts[customer]?.let {
             Money(it.value.plus(moneyAmount.value), currency)
         } ?: moneyAmount
 
         accounts[customer] = newBalance
+        return Success(moneyAmount)
     }
 
     fun balanceFor(customer: Customer): Money? {

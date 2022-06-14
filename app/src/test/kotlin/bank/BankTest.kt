@@ -1,5 +1,6 @@
 package bank
 
+import dev.forkhandles.result4k.Success
 import dev.forkhandles.result4k.failureOrNull
 import dev.forkhandles.result4k.get
 import java.math.BigDecimal.*
@@ -20,7 +21,10 @@ class BankTest {
     @Test
     fun `should maintain the balance for a single customer's single deposit`() {
         val bank = Bank(getInstance(US))
-        bank.deposit(Customer("Alice"), Money(ONE, getInstance(US)))
+        assertEquals(
+            Success(Money(ONE, getInstance(US))),
+            bank.deposit(Customer("Alice"), Money(ONE, getInstance(US)))
+        )
 
         assertEquals(Money(ONE, getInstance(US)), bank.balanceFor(Customer("Alice")))
     }
