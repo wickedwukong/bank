@@ -14,10 +14,10 @@ class Bank(val currency: Currency) {
             Money(totalBalance.value.plus(accountBalance.value), totalBalance.currency)
         }
 
-    fun deposit(customer: Customer, moneyAmount: BigDecimal) {
+    fun deposit(customer: Customer, moneyAmount: Money) {
         val newBalance = accounts[customer]?.let {
-            Money(it.value.plus(moneyAmount), currency)
-        } ?: Money(moneyAmount, currency)
+            Money(it.value.plus(moneyAmount.value), currency)
+        } ?: moneyAmount
 
         accounts[customer] = newBalance
     }
