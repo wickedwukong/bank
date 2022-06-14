@@ -153,4 +153,18 @@ class BankTest {
 
         assertEquals(Money(ONE, getInstance(US)), bank.balanceFor(Customer("Alice")))
     }
+
+    @Test
+    fun `should result in error when withdrawing unsupported currency and maintain customer's original balance`() {
+        val bank = Bank(getInstance(US))
+        bank.deposit(Customer("Alice"), Money(ONE, getInstance(US)))
+
+        assertEquals(
+            Failure(UnSupportedCurrencyError(getInstance(US), getInstance(UK))),
+            bank.withdraw(Customer("Alice"), Money(ONE, getInstance(UK)))
+        )
+
+        assertEquals(Money(ONE, getInstance(US)), bank.balanceFor(Customer("Alice")))
+    }
+
 }

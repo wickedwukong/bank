@@ -27,18 +27,19 @@ class Bank(val currency: Currency) {
     }
 
     fun withdraw(customer: Customer, withdrawingAmount: Money): Result4k<Money, BankError> =
-        validateWithdrawAmount(withdrawingAmount)
-            .flatMap {
-                validateCustomer(customer)
-            }.flatMap { existingBalance ->
-                validateBalanceAgainstAttemptedWithdraw(existingBalance, withdrawingAmount, customer)
-            }.map { existingBalance ->
-                Money(existingBalance.value.minus(withdrawingAmount.value), currency)
-            }.peek { newBalance ->
-                accounts[customer] = newBalance
-            }.map {
-                withdrawingAmount
-            }
+        validateCurrency(withdrawingAmount).flatMap {
+            validateWithdrawAmount(withdrawingAmount)
+        }.flatMap {
+            validateCustomer(customer)
+        }.flatMap { existingBalance ->
+            validateBalanceAgainstAttemptedWithdraw(existingBalance, withdrawingAmount, customer)
+        }.map { existingBalance ->
+            Money(existingBalance.value.minus(withdrawingAmount.value), currency)
+        }.peek { newBalance ->
+            accounts[customer] = newBalance
+        }.map {
+            withdrawingAmount
+        }
 
     private fun validateCustomer(customer: Customer) = balanceFor(customer)?.let { existingBalance ->
         Success(existingBalance)

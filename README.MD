@@ -10,6 +10,5 @@
 
 TODO:
 
-test withdraw same amount as balance
 withdraw unsupported currency
 
