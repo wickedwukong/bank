@@ -1,5 +1,6 @@
 package bank
 
+import dev.forkhandles.result4k.Failure
 import dev.forkhandles.result4k.Success
 import dev.forkhandles.result4k.failureOrNull
 import dev.forkhandles.result4k.get
@@ -27,6 +28,17 @@ class BankTest {
         )
 
         assertEquals(Money(ONE, getInstance(US)), bank.balanceFor(Customer("Alice")))
+    }
+
+    @Test
+    fun `should result in error when depositing unsupported currency`() {
+        val bank = Bank(getInstance(US))
+        assertEquals(
+            Failure(UnSupportedCurrencyError(getInstance(US), getInstance(UK))),
+            bank.deposit(Customer("Alice"), Money(ONE, getInstance(UK)))
+        )
+
+        assertNull(bank.balanceFor(Customer("Alice")))
     }
 
     @Test

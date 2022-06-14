@@ -14,7 +14,10 @@ class Bank(val currency: Currency) {
             Money(totalBalance.value.plus(accountBalance.value), totalBalance.currency)
         }
 
-    fun deposit(customer: Customer, moneyAmount: Money): Result4k<Money, Unit> {
+    fun deposit(customer: Customer, moneyAmount: Money): Result4k<Money, BankError> {
+        if (moneyAmount.currency != currency) {
+            return Failure(UnSupportedCurrencyError(currency, moneyAmount.currency))
+        }
         val newBalance = accounts[customer]?.let {
             Money(it.value.plus(moneyAmount.value), currency)
         } ?: moneyAmount

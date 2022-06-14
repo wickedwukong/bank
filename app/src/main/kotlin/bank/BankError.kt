@@ -1,5 +1,7 @@
 package bank
 
+import java.util.*
+
 sealed interface BankError {
     val message: String
 }
@@ -8,6 +10,11 @@ data class AmountHasToBeMoreThanZeroError(val amount: Money) : BankError {
     override val message: String
         get() = "Amount has to be more than Zero. Invalid amount: $amount"
 
+}
+
+data class UnSupportedCurrencyError(val supportedCurrency: Currency, val unsupportedCurrency: Currency) : BankError {
+    override val message: String
+        get() = TODO("Not yet implemented")
 }
 
 data class WithdrawExceedingBalanceError(val customer: Customer, val attemptedWithdrawAmount: Money) : BankError {
