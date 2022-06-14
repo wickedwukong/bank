@@ -1,5 +1,7 @@
 package bank
 
+import dev.forkhandles.result4k.failureOrNull
+import dev.forkhandles.result4k.valueOrNull
 import java.math.BigDecimal.*
 import java.util.Currency.getInstance
 import java.util.Locale.UK
@@ -19,11 +21,14 @@ class BankTest {
     fun `should maintain the balance for a single customer's single deposit`() {
         val bank = Bank(getInstance(US))
         bank.deposit(Customer("Alice"), ONE)
+
         assertEquals(Money(ONE, getInstance(US)), bank.balanceFor(Customer("Alice")))
     }
+
     @Test
     fun `should have no balance for an unknown customer`() {
         val bank = Bank(getInstance(US))
+
         assertNull(bank.balanceFor(Customer("Alice")))
     }
 
@@ -31,6 +36,7 @@ class BankTest {
     fun `should maintain the balance for a single customer's single deposit in anthoer currency (GBP)`() {
         val bank = Bank(getInstance(UK))
         bank.deposit(Customer("Alice"), ONE)
+
         assertEquals(Money(ONE, getInstance(UK)), bank.balanceFor(Customer("Alice")))
     }
 
@@ -39,6 +45,7 @@ class BankTest {
         val bank = Bank(getInstance(US))
         bank.deposit(Customer("Alice"), ONE)
         bank.deposit(Customer("Alice"), TEN)
+
         assertEquals(Money(valueOf(11), getInstance(US)), bank.balanceFor(Customer("Alice")))
     }
 
@@ -49,6 +56,7 @@ class BankTest {
         bank.deposit(Customer("Alice"), ONE)
         bank.deposit(Customer("Alice"), TEN)
         bank.deposit(Customer("Bob"), TEN)
+
         assertEquals(Money(valueOf(11), getInstance(US)), bank.balanceFor(Customer("Alice")))
         assertEquals(Money(TEN, getInstance(US)), bank.balanceFor(Customer("Bob")))
     }
@@ -58,6 +66,7 @@ class BankTest {
         val bank = Bank(getInstance(US))
         bank.deposit(Customer("Alice"), ONE)
         bank.deposit(Customer("Alice"), TEN)
+
         assertEquals(Money(valueOf(11), getInstance(US)), bank.totalBalance())
     }
 
@@ -67,6 +76,28 @@ class BankTest {
         bank.deposit(Customer("Alice"), ONE)
         bank.deposit(Customer("Alice"), TEN)
         bank.deposit(Customer("Bob"), TEN)
+
         assertEquals(Money(valueOf(21), getInstance(US)), bank.totalBalance())
+    }
+
+    @Test
+    fun `should result in error when withdrawing for an unknown customer`() {
+        val bank = Bank(getInstance(US))
+        assertEquals(
+            bank.withdraw(Customer("UnknownCustomerId"), ONE).failureOrNull(),
+            UnknownCustomerError(Customer("UnknownCustomerId"))
+        )
+    }
+
+    @Test
+    fun `should let customer withdraw money`() {
+        val bank = Bank(getInstance(US))
+        bank.deposit(Customer("Alice"), TEN)
+
+        assertEquals(
+            Money(valueOf(9), getInstance(US)),
+            bank.withdraw(Customer("Alice"), ONE).valueOrNull()
+
+        )
     }
 }
