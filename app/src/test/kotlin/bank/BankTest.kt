@@ -106,12 +106,20 @@ class BankTest {
     }
 
     @Test
-    fun `should let customer withdraw money and maintain customer's new balance`() {
+    fun `should let customer withdraw money which amount is less than existing balance and maintain customer's new balance after withdraw`() {
         val bank = Bank(getInstance(US))
         bank.deposit(Customer("Alice"), Money(TEN, getInstance(US)))
 
         assertEquals(Money(ONE, getInstance(US)), bank.withdraw(Customer("Alice"), Money(ONE, bank.currency)).get())
         assertEquals(Money(valueOf(9), getInstance(US)), bank.balanceFor(Customer("Alice")))
+    }
+    @Test
+    fun `should let customer withdraw all of the customer's balance and the customer's balance should be zero after the withdraw`() {
+        val bank = Bank(getInstance(US))
+        bank.deposit(Customer("Alice"), Money(TEN, getInstance(US)))
+
+        assertEquals(Money(TEN, getInstance(US)), bank.withdraw(Customer("Alice"), Money(TEN, bank.currency)).get())
+        assertEquals(Money(ZERO, getInstance(US)), bank.balanceFor(Customer("Alice")))
     }
 
     @Test

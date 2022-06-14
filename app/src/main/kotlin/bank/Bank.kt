@@ -45,7 +45,7 @@ class Bank(val currency: Currency) {
     } ?: Failure(UnknownCustomerError(customer))
 
     private fun validateBalanceAgainstAttemptedWithdraw(balance: Money, withdrawingAmount: Money, customer: Customer) =
-        if (balance.value > withdrawingAmount.value) {
+        if (balance.value >= withdrawingAmount.value) {
             Success(balance)
         } else {
             Failure(
