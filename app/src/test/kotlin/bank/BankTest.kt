@@ -138,7 +138,7 @@ class BankTest {
     }
 
     @Test
-    fun `should result in error when withdrawing Zero or less than Zero amount`() {
+    fun `should result in error when withdrawing Zero or less than Zero amount Customer's balance and Bank's total balance are unchanged`() {
         val bank = Bank(getInstance(US))
         bank.deposit(Customer("Alice"), Money(ONE, getInstance(US)))
 
@@ -154,6 +154,7 @@ class BankTest {
         )
 
         assertEquals(Money(ONE, getInstance(US)), bank.balanceFor(Customer("Alice")))
+        assertEquals(Money(ONE, getInstance(US)), bank.totalBalance())
     }
 
     @Test
