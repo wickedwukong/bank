@@ -13,6 +13,10 @@
    * Single currency or multiple currency support? Supporting multiple currency will require either currency conversion
      or maintaining multiple currency account for a single customer. This will dramatically complicate the solution. The solution
      supports single currency only, not multiple currencies.
+   * Fixed USD currency support or currency is configurable? The solution could be made a lot simpler if we only need to support a fixed USD currency.
+     In that case, we could have a `USDMoney` class which has a fixed USD currency and a numeric value. I have decided to support configurable currency
+     at the `Bank` level. Therefor the `Money` needs to have both value and currency configurable and the `Bank` need to deals with unsupported
+     currency scenarios. In the real life project, a conversation will be had to clarify the requirements.
    * Concurrency is not addressed to simplify design. The Bank is not thread safe.
 
 4. Design
