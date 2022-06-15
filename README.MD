@@ -42,4 +42,4 @@
    * `BankError` has a set of errors representing a few error scenarios. e.g. negative deposit & unsupported currency
    * Each `BankError` captures some information to provide an informative message to show what went wrong
 6. Dependency
-   The system's only external dependency is [`Result(4K)`](https://github.com/npryce/result4k). [See here]((https://github.com/npryce/result4k)) See above for reasons why it is used
+   The system's only external dependency is [`Result(4K)`](https://github.com/npryce/result4k). [See here](https://github.com/npryce/result4k) See above for reasons why it is used
