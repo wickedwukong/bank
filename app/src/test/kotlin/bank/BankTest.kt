@@ -97,6 +97,27 @@ class BankTest {
     }
 
     @Test
+    fun `should result in error when attempting depositing zero or negative amount, customer and Bank's total balance should not be changed`() {
+        val bank = Bank(getInstance(US))
+        bank.deposit(Customer("Alice"), Money(ONE, bank.currency))
+
+
+        assertEquals(
+            AmountHasToBePositiveError(Money(valueOf(0), getInstance(US))),
+            bank.deposit(Customer("Alice"), Money(ZERO, bank.currency)).failureOrNull()
+        )
+
+        assertEquals(
+            AmountHasToBePositiveError(Money(valueOf(-1), getInstance(US))),
+            bank.deposit(Customer("Alice"), Money(valueOf(-1), bank.currency)).failureOrNull()
+        )
+
+        assertEquals(Money(ONE, getInstance(US)), bank.balanceFor(Customer("Alice")))
+        assertEquals(Money(ONE, getInstance(US)), bank.totalBalance())
+    }
+
+
+    @Test
     fun `should result in error when withdrawing for an unknown customer and Bank's total balance is not changed`() {
         val bank = Bank(getInstance(US))
         assertEquals(

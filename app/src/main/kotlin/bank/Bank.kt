@@ -18,7 +18,8 @@ class Bank(val currency: Currency) {
     fun balanceFor(customer: Customer): Money? = this.accounts[customer]
 
     fun deposit(customer: Customer, deposit: Money): Result4k<Money, BankError> =
-        validateCurrency(deposit)
+        validateSupportedCurrency(deposit)
+            .flatMap { validateAmountHasToBePositive(deposit) }
             .map { validDeposit ->
                 accounts[customer]?.let {
                     Money(it.value.plus(validDeposit.value), currency)
@@ -29,7 +30,7 @@ class Bank(val currency: Currency) {
 
 
     fun withdraw(customer: Customer, withdrawingAmount: Money): Result4k<Money, BankError> =
-        validateCurrency(withdrawingAmount).flatMap {
+        validateSupportedCurrency(withdrawingAmount).flatMap {
             validateAmountHasToBePositive(withdrawingAmount)
         }.flatMap {
             validateCustomer(customer)
@@ -63,7 +64,7 @@ class Bank(val currency: Currency) {
             Success(withdrawingAmount)
         }
 
-    private fun validateCurrency(moneyAmount: Money): Result4k<Money, BankError> =
+    private fun validateSupportedCurrency(moneyAmount: Money): Result4k<Money, BankError> =
         if (moneyAmount.currency == currency) {
             Success(moneyAmount)
         } else {

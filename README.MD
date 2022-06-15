@@ -9,6 +9,7 @@
 9. why sum and subtraction logics are in Bank not Money
 
 TODO:
+implement and test deposit zero or negative values
 
 The main class is `Bank`. The `Bank` supports the following features:
 
@@ -33,9 +34,10 @@ Supported & tested scenarios:
 
 # Deposit:
 
-1. Deposit a regular amount results in a `Success` with the deposit amount returned 
-2. Deposit a negative or Zero amount results in a `Failure` with a specific error
-3. Deposit an amount with unsupported currency results in a `Failure` with a `UnSupportedCurrencyError`
+1. Deposit a regular amount for an existing customer results in a `Success` with the deposit amount returned 
+2. Deposit a regular amount for a non-existing customer
+3. Deposit a negative or Zero amount results in a `Failure` with a specific error
+4. Deposit an amount with unsupported currency results in a `Failure` with a `UnSupportedCurrencyError`
 
 # Withdraw
 
