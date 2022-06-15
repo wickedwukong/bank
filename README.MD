@@ -27,43 +27,17 @@
    * Customers are represented as `Customer` instead of a primitive type, e.g a String. This is because Customer is
      often one of the most important domain concept with behavior and identification in real systems, although 
      a primitive type could be enough for our requirements.
-   * The `Bank` deals with invalid input. It uses `Result(4K)` to represent an outcome which can be either a success or a failure.
+   * The `Bank` deals with invalid input. It uses [`Result(4K)`](https://github.com/npryce/result4k) to represent an outcome which can be either a `Success` or a `Failure`.
      The reason `Result` is used is because 
      1. "Kotlin does not type-check exceptions. Result4k lets you type-check code that reports and recovers from errors."
      2. The alternative is to use exception. This does not inform the client that error scenarios need to be dealt with
      3. "Result4k works with the grain of the Kotlin language." By using `map`, `flatMap` & `peek` etc. code can be written
         in a fluent fashion, much like working with Kotlin collection or null to transform a result
-     4. `Result4K` has a tiny footprint and it has been battle tested 
-4. main class
-5. https://github.com/npryce/result4k
-6. edge cases/unhappy path: customer does not exist. withdraw negative values. deposit zero & negative values
-7. Why choosing map
-8. Why data class customer?
-9. Assumption: only support a single currency?
-10. why sum and subtraction logics are in Bank not Money
-
-TODO:
-implement and test deposit zero or negative values
-
-The main class is `Bank`. The `Bank` supports the following features:
-
-Assumption:
-The Bank only supports a single currency. Currency is configured when `Bank` is initiated. Having the `Bank` deal with
-a different currency results in a `Failure` with a `UnSupportedCurrencyError` (See detailed scenarios below.) when 
-depositing or withdrawing
-
-Thread safety is not a concern. Concurrent access to a customer account modifying balance is not addressed in the solution.
-
-Overall design:
-
-The main class is `Bank`. The `Bank` supports the following features:
-
-1. Deposit
-2. Withdraw
-3. Checking balance for a customer
-4. Total Bank balance 
-5. Multiple customers
-6. Validation on deposit and withdraw
-
-Supported & tested scenarios:
-
+     4. `Result4K` has a tiny footprint and it has been battle tested. I'm very familiar with it. 
+   * `map` is used to track Customer's account to allow fast lookup
+4. Error representation 
+   * `BankError` is a sealed interface so that the system knows all possible errors
+   * `BankError` has a set of errors representing a few error scenarios. e.g. negative deposit & unsupported currency
+   * Each `BankError` captures some information to provide an informative message to show what went wrong
+5. Dependency
+   The system's only external dependency is [`Result(4K)`](https://github.com/npryce/result4k). See above for reasons why it is used
