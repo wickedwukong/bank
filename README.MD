@@ -29,23 +29,38 @@ The main class is `Bank`. The `Bank` supports the following features:
 3. Checking balance for a customer
 4. Total Bank balance 
 5. Multiple customers
+6. Validation on deposit and withdraw
 
 Supported & tested scenarios:
 
 # Deposit:
 
-1. Deposit a regular amount for an existing customer results in a `Success` with the deposit amount returned 
+1. Deposit a regular amount for an existing customer
+
+   * It results in a `Success` with the deposit amount returned.
+   * Customer's balance is maintained
+   * Bank's total balance is maintained
+   
 2. Deposit a regular amount for a non-existing customer
-3. Deposit a negative or Zero amount results in a `Failure` with a specific error
-4. Deposit an amount with unsupported currency results in a `Failure` with a `UnSupportedCurrencyError`
+    * It results in a `Success` with the deposit amount returned.
+    * A new Customer Account is created with the balance
+    * Bank's total balance is maintained
+
+3. Deposit a negative or Zero amount 
+   * It results in a `Failure` with a specific error
+   
+4. Deposit an amount with unsupported currency 
+   * It results in a `Failure` with a `UnSupportedCurrencyError`
 
 # Withdraw
 
-1. Withdraw a regular amount, i.e. less than existing amount, results in a `Success` with the withdrew amount returned
-2. Withdraw all of a customer's balance results in a `Success` with the withdrew amount returned. Customer's balance becomes Zero
-3. Withdraw a negative or Zero amount results in a `Failure` with a specific error
-4. Withdraw an amount with unsupported currency results in `Failure` with a `UnSupportedCurrencyError`
-5. Withdraw more than existing balance results in `Failure` with a specific error
+1. Withdraw a regular amount for an existing customer 
+   * It results in a `Success` with the withdrew amount returned
+2. Withdraw a regular amount for a non-existing customer
+3. Withdraw all of a customer's balance results in a `Success` with the withdrew amount returned. Customer's balance becomes Zero
+4. Withdraw a negative or Zero amount results in a `Failure` with a specific error
+5. Withdraw an amount with unsupported currency results in `Failure` with a `UnSupportedCurrencyError`
+6. Withdraw more than existing balance results in `Failure` with a specific error
 
 # Checking balance for a customer
 
@@ -55,7 +70,7 @@ Supported & tested scenarios:
 4. Checking balance for a customer after a withdraw of all of a customer's balance
 5. Checking balance for a customer after multiple withdraws
 6. Checking balance after a deposit and withdraw error
-7. Checking balance after a non-existing customer.
+7. Checking balance for a non-existing customer.
 
 
 
